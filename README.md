@@ -47,7 +47,7 @@ For example:
 In the above example there are 3 bulks of vaccines in the inventory, 1 supplier, 2 clinics, and 2 logistics services. 
   
 # Orders : 
-there are two type of orders supported: recive & send
+there are two type of orders supported: Recive & Send shipment.
 1) Receive Shipment -  This order will receive a shipment from one of the available suppliers: <name>,<amount>,<date>.
    This order will add < amount > vaccines from < name > on < date >. Executing the order will add the relevant item to the Vaccines table, 
    and update the count received on the relevant supplier. 
@@ -61,4 +61,21 @@ there are two type of orders supported: recive & send
    For example, using the previous example tables: Tel-Aviv,50 - 
    Will reduce the demand in Tel-Aviv by 50, remove all three entries from the Vaccines table, and increase the count sent by 50 on the DHLUPS entry.
 
-
+# Executing the Orders :
+The orders will be read from the specified file, and executed in the order they appear in the file, each line will be a single order. For example:
+Pfizer,20,2021-01-02 
+Pfizer,100,2021-01-10
+Tel-Aviv,40
+Will first receive the two shipments from Pfizer, then send a single shipment to Tel-Aviv.
+  
+# Summary File :
+After each order a line will be added to the summary, the line should include:
+<total_inventory>,<total_demand>,<total_received>,<total_sent>
+For executing the 3 orders above, using the previous table, you will have an output file of 3 lines:
+70,200,20,0
+170,200,120,0
+130,160,120,40
+  
+# Executing:
+Usage: python3 compare_output.py true_output.txt tested_output.txt db_true.db db_tested.db
+attached an example input, and expected outputs (database and output file)
